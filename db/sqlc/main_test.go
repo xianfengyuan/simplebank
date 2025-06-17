@@ -16,6 +16,7 @@ const (
 
 var testQueries *Queries
 var testDB *pgxpool.Pool
+var testStore *Store
 
 func TestMain(m *testing.M) {
 	testDB, err := pgxpool.New(context.Background(), dbSource)
@@ -24,6 +25,8 @@ func TestMain(m *testing.M) {
 	}
 
 	testQueries = New(testDB)
+
+	testStore = NewStore(testDB)
 
 	os.Exit(m.Run())
 	// This function is intentionally left empty.
