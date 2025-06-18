@@ -1,10 +1,16 @@
 DB_URL=postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable
 
+network:
+	docker network create bank-network
+
+postgres:
+	docker run --name postgres --network bank-network -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:14-alpine
+
 createdb:
-	createdb -U root -O root simple_bank
+	docker exec -it postgres createdb --username=root --owner=root simple_bank
 
 dropdb:
-	dropdb -U root simple_bank
+	docker exec -it postgres dropdb simple_bank
 
 migrateup:
 	migrate -path db/migration -database "$(DB_URL)" -verbose up
@@ -18,5 +24,5 @@ sqlc:
 test:
 	go test -v -cover ./...
 
-.PHONY: createdb dropdb migrateup migratedown sqlc test
+.PHONY: network postgres createdb dropdb migrateup migratedown sqlc test
 
