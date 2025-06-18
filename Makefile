@@ -1,14 +1,16 @@
+DB_URL=postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable
+
 createdb:
-	createdb -U xianfengyuan -O xianfengyuan simple_bank
+	createdb -U root -O root simple_bank
 
 dropdb:
-	dropdb -U xianfengyuan simple_bank
+	dropdb -U root simple_bank
 
 migrateup:
-	migrate -path db/migration -database "postgres://xianfengyuan@localhost/simple_bank?sslmode=disable" -verbose up
+	migrate -path db/migration -database "$(DB_URL)" -verbose up
 
 migratedown:
-	migrate -path db/migration -database "postgres://xianfengyuan@localhost/simple_bank?sslmode=disable" -verbose down
+	migrate -path db/migration -database "$(DB_URL)" -verbose down
 
 sqlc:
 	sqlc generate
