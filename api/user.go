@@ -17,6 +17,14 @@ type createUserRequest struct {
 	Email    string `json:"email" binding:"required,email"`
 }
 
+type userResp struct {
+	Username          string `json:"username"`
+	FullName          string `json:"full_name"`
+	Email             string `json:"email"`
+	PasswordChangedAt string `json:"password_changed_at"`
+	CreatedAt         string `json:"created_at"`
+}
+
 func (server *Server) createUser(ctx *gin.Context) {
 	var req createUserRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -55,14 +63,6 @@ func (server *Server) createUser(ctx *gin.Context) {
 
 type getUserRequest struct {
 	Username string `json:"username" binding:"required,alphanum"`
-}
-
-type userResp struct {
-	Username          string `json:"username" binding:"`
-	FullName          string `json:"full_name"`
-	Email             string `json:"email"`
-	PasswordChangedAt string `json:"password_changed_at"`
-	CreatedAt         string `json:"created_at"`
 }
 
 func (server *Server) getUser(ctx *gin.Context) {
