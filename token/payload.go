@@ -2,6 +2,7 @@ package token
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -41,4 +42,12 @@ func NewPayload(username string, duration time.Duration) (*Payload, error) {
 	}
 
 	return payload, nil
+}
+
+// Valid checks if the token payload is valid (not expired, etc.)
+func (payload *Payload) Valid() error {
+	if time.Now().After(payload.ExpiredAt) {
+		return fmt.Errorf("token has expired")
+	}
+	return nil
 }
