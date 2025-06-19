@@ -44,7 +44,13 @@ func (server *Server) createUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
-	ctx.JSON(http.StatusOK, user)
+	ctx.JSON(http.StatusOK, userResp{
+		Username:          user.Username,
+		FullName:          user.FullName,
+		Email:             user.Email,
+		PasswordChangedAt: user.PasswordChangedAt.Time.String(),
+		CreatedAt:         user.CreatedAt.Time.String(),
+	})
 }
 
 type getUserRequest struct {
@@ -80,6 +86,6 @@ func (server *Server) getUser(ctx *gin.Context) {
 		FullName:          user.FullName,
 		Email:             user.Email,
 		PasswordChangedAt: user.PasswordChangedAt.Time.String(),
-		CreatedAt:         user.PasswordChangedAt.Time.String(),
+		CreatedAt:         user.CreatedAt.Time.String(),
 	})
 }
