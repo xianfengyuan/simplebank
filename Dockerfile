@@ -15,6 +15,8 @@ COPY . .
 
 # Build the Go application
 RUN go build -o main .
+RUN apk add curl
+RUN curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.3/migrate.linux-amd64.tar.gz | tar xvz
 
 # Create a new lightweight image for the final application
 FROM alpine:latest
@@ -23,11 +25,15 @@ FROM alpine:latest
 WORKDIR /app
 
 # Copy the executable from the builder stage
-COPY --from=builder /app/main ./
-COPY app.env ./
+COPY --from=builder /app/main .
+COPY --from=builder /app/migrate ./migrate
+COPY app.env .
+COPY start.sh .
+COPY db/migration ./migration
 
 # Expose the port the app runs on
 EXPOSE 8080
 
 # Command to run the executable
-CMD ["/app/main"]
+CMD [ "/app/main" ]
+ENTRYPOINT [ "/app/start.sh" ]
