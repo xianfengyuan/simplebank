@@ -5,6 +5,7 @@
 package db
 
 import (
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -21,6 +22,17 @@ type Entry struct {
 	AccountID int64
 	Amount    int64
 	CreatedAt pgtype.Timestamptz
+}
+
+type Session struct {
+	ID           uuid.UUID
+	Username     string
+	RefreshToken string
+	UserAgent    string
+	ClientIp     string
+	IsBlocked    bool
+	ExpiresAt    pgtype.Timestamptz
+	CreatedAt    pgtype.Timestamptz
 }
 
 type Transfer struct {
