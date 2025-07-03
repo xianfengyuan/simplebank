@@ -1,6 +1,7 @@
 images:
 - gcr.io/swan-5bn2/github.com/xianfengyuan/simplebank:$COMMIT_SHA
-options: {}
+options:
+  logging: CLOUD_LOGGING_ONLY
 steps:
 - args:
   - build
