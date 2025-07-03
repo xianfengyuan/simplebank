@@ -8,4 +8,3 @@ steps:
   - gcr.io/swan-5bn2/github.com/xianfengyuan/simplebank:$COMMIT_SHA
   - .
   name: gcr.io/cloud-builders/docker
-  logging: CLOUD_LOGGING_ONLY
