@@ -10,12 +10,4 @@ build:
     - .
     name: gcr.io/cloud-builders/docker
     logging: CLOUD_LOGGING_ONLY
-createTime: '2025-07-03T20:17:36.765689493Z'
-id: f0f7b11f-37f1-4968-a295-249c11b5ae8e
 name: cloudbuild
-repositoryEventConfig:
-  push:
-    branch: .*
-  repository: projects/swan-5bn2/locations/us-west4/connections/simplebank/repositories/xianfengyuan-simplebank
-  repositoryType: GITHUB
-serviceAccount: projects/swan-5bn2/serviceAccounts/cloudbuild-sa@swan-5bn2.iam.gserviceaccount.com
