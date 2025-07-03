@@ -1,11 +1,11 @@
 images:
-- us-docker.pkg.dev/swan-5bn2/simplebank-repo:$COMMIT_SHA
+- us-docker.pkg.dev/swan-5bn2/simplebank-repo/simplebank:$COMMIT_SHA
 options:
   logging: CLOUD_LOGGING_ONLY
 steps:
 - args:
   - build
   - -t
-  - us-docker.pkg.dev/swan-5bn2/simplebank-repo:$COMMIT_SHA
+  - us-docker.pkg.dev/swan-5bn2/simplebank-repo/simplebank:$COMMIT_SHA
   - .
   name: gcr.io/cloud-builders/docker
