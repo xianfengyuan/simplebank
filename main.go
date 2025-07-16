@@ -4,7 +4,9 @@ import (
 	"context"
 	"log"
 	"net"
+	"net/http"
 
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/xianfengyuan/simplebank/api"
 	db "github.com/xianfengyuan/simplebank/db/sqlc"
@@ -26,6 +28,7 @@ func main() {
 	}
 
 	store := db.NewStore(conn)
+	go runGatewayServer(config, store)
 	runGrpcServer(config, store)
 }
 
@@ -47,6 +50,35 @@ func runGrpcServer(config util.Config, store db.Store) {
 	err = grpcServer.Serve(listener)
 	if err != nil {
 		log.Fatal("cannot start grpc Server")
+	}
+}
+
+func runGatewayServer(config util.Config, store db.Store) {
+	server, err := gapi.NewServer(config, store)
+	if err != nil {
+		log.Fatal("cannot create server: %w", err)
+	}
+
+	grpcMux := runtime.NewServeMux()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	err = pb.RegisterSimpleBankHandlerServer(ctx, grpcMux, server)
+	if err != nil {
+		log.Fatal("cannot register simplebank handler server")
+	}
+
+	mux := http.NewServeMux()
+	mux.Handle("/", grpcMux)
+
+	listener, err := net.Listen("tcp", config.HTTPServerAddress)
+	if err != nil {
+		log.Fatal("cannot start listener")
+	}
+	log.Printf("start HTTP gateway server at %s", listener.Addr().String())
+	err = http.Serve(listener, mux)
+	if err != nil {
+		log.Fatal("cannot start HTTP gateway Server")
 	}
 }
 
