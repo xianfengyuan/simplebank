@@ -44,7 +44,7 @@ func migrateDB(migrationURL string, dbSource string) {
 	if err != nil {
 		log.Fatal("new migration DB failed: ", err)
 	}
-	if err = m.Up(); err != nil {
+	if err = m.Up(); err != nil && err != migrate.ErrNoChange {
 		log.Fatal("migration up failed: ", err)
 	}
 	log.Println("migration succeeded")
