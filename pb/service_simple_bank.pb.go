@@ -7,6 +7,7 @@
 package pb
 
 import (
+	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
@@ -25,26 +26,35 @@ var File_service_simple_bank_proto protoreflect.FileDescriptor
 
 const file_service_simple_bank_proto_rawDesc = "" +
 	"\n" +
-	"\x19service_simple_bank.proto\x12\x02pb\x1a\x1cgoogle/api/annotations.proto\x1a\x15rpc_create_user.proto\x1a\x14rpc_login_user.proto2\xba\x01\n" +
+	"\x19service_simple_bank.proto\x12\x02pb\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\x1a\x15rpc_create_user.proto\x1a\x15rpc_update_user.proto\x1a\x14rpc_login_user.proto2\xa1\x03\n" +
 	"\n" +
-	"SimpleBank\x12W\n" +
+	"SimpleBank\x12\x8e\x01\n" +
 	"\n" +
-	"CreateUser\x12\x15.pb.CreateUserRequest\x1a\x16.pb.CreateUserResponse\"\x1a\x82\xd3\xe4\x93\x02\x14:\x01*\"\x0f/v1/create_user\x12S\n" +
-	"\tLoginUser\x12\x14.pb.LoginUserRequest\x1a\x15.pb.LoginUserResponse\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/v1/login_userB'Z%github.com/xianfengyuan/simplebank/pbb\x06proto3"
+	"CreateUser\x12\x15.pb.CreateUserRequest\x1a\x16.pb.CreateUserResponse\"Q\x92A4\x12\x0fCreate new user\x1a!Use this API to create a new user\x82\xd3\xe4\x93\x02\x14:\x01*\"\x0f/v1/create_user\x12\x86\x01\n" +
+	"\n" +
+	"UpdateUser\x12\x15.pb.UpdateUserRequest\x1a\x16.pb.UpdateUserResponse\"I\x92A,\x12\vUpdate user\x1a\x1dUse this API to update a user\x82\xd3\xe4\x93\x02\x14:\x01*\"\x0f/v1/update_user\x12y\n" +
+	"\tLoginUser\x12\x14.pb.LoginUserRequest\x1a\x15.pb.LoginUserResponse\"?\x92A#\x12\n" +
+	"User login\x1a\x15Use this API to login\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/v1/login_userB\x8c\x01\x92Ab\x12`\n" +
+	"\x0fSimple Bank API\"H\n" +
+	"\x0eSheer Mountain\x12\x1fhttps://github.com/xianfengyuan\x1a\x15techsupport@gmail.com2\x031.1Z%github.com/xianfengyuan/simplebank/pbb\x06proto3"
 
 var file_service_simple_bank_proto_goTypes = []any{
 	(*CreateUserRequest)(nil),  // 0: pb.CreateUserRequest
-	(*LoginUserRequest)(nil),   // 1: pb.LoginUserRequest
-	(*CreateUserResponse)(nil), // 2: pb.CreateUserResponse
-	(*LoginUserResponse)(nil),  // 3: pb.LoginUserResponse
+	(*UpdateUserRequest)(nil),  // 1: pb.UpdateUserRequest
+	(*LoginUserRequest)(nil),   // 2: pb.LoginUserRequest
+	(*CreateUserResponse)(nil), // 3: pb.CreateUserResponse
+	(*UpdateUserResponse)(nil), // 4: pb.UpdateUserResponse
+	(*LoginUserResponse)(nil),  // 5: pb.LoginUserResponse
 }
 var file_service_simple_bank_proto_depIdxs = []int32{
 	0, // 0: pb.SimpleBank.CreateUser:input_type -> pb.CreateUserRequest
-	1, // 1: pb.SimpleBank.LoginUser:input_type -> pb.LoginUserRequest
-	2, // 2: pb.SimpleBank.CreateUser:output_type -> pb.CreateUserResponse
-	3, // 3: pb.SimpleBank.LoginUser:output_type -> pb.LoginUserResponse
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+	1, // 1: pb.SimpleBank.UpdateUser:input_type -> pb.UpdateUserRequest
+	2, // 2: pb.SimpleBank.LoginUser:input_type -> pb.LoginUserRequest
+	3, // 3: pb.SimpleBank.CreateUser:output_type -> pb.CreateUserResponse
+	4, // 4: pb.SimpleBank.UpdateUser:output_type -> pb.UpdateUserResponse
+	5, // 5: pb.SimpleBank.LoginUser:output_type -> pb.LoginUserResponse
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -56,6 +66,7 @@ func file_service_simple_bank_proto_init() {
 		return
 	}
 	file_rpc_create_user_proto_init()
+	file_rpc_update_user_proto_init()
 	file_rpc_login_user_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
