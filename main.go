@@ -56,7 +56,8 @@ func runGrpcServer(config util.Config, store db.Store) {
 		log.Fatal("cannot create server: %w", err)
 	}
 
-	grpcServer := grpc.NewServer()
+	grpcLogger := grpc.UnaryInterceptor(gapi.GrpcLogger)
+	grpcServer := grpc.NewServer(grpcLogger)
 	pb.RegisterSimpleBankServer(grpcServer, server)
 	reflection.Register(grpcServer)
 
@@ -112,7 +113,7 @@ func runGatewayServer(config util.Config, store db.Store) {
 		AllowCredentials: true,
 	})
 
-	handler := c.Handler(mux)
+	handler := c.Handler(gapi.HttpLogger(mux))
 	listener, err := net.Listen("tcp", config.HTTPServerAddress)
 	if err != nil {
 		log.Fatal("cannot start listener")
