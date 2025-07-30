@@ -3,7 +3,6 @@ package gapi
 import (
 	"context"
 
-	"github.com/jackc/pgx/v5/pgconn"
 	db "github.com/xianfengyuan/simplebank/db/sqlc"
 	"github.com/xianfengyuan/simplebank/pb"
 	"github.com/xianfengyuan/simplebank/util"
@@ -29,14 +28,12 @@ func (server *Server) CreateUser(ctx context.Context, req *pb.CreateUserRequest)
 
 	user, err := server.store.CreateUser(ctx, arg)
 	if err != nil {
-		if pgerr, ok := err.(*pgconn.PgError); ok {
-			switch pgerr.Code {
-			case "23503", "23505":
-				return nil, status.Errorf(codes.InvalidArgument, "Failed to create user: %s", pgerr)
-			}
+		if db.ErrorCode(err) == db.UniqueViolation {
+				return nil, status.Errorf(codes.AlreadyExists, "username already exists: %s", err)
 		}
 		return nil, status.Errorf(codes.Internal, "Failed to create user: %s", err)
 	}
+
 	rsp := &pb.CreateUserResponse{
 		User: convertUser(user),
 	}

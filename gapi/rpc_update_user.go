@@ -2,9 +2,9 @@ package gapi
 
 import (
 	"context"
+	"errors"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgtype"
 	db "github.com/xianfengyuan/simplebank/db/sqlc"
 	"github.com/xianfengyuan/simplebank/pb"
@@ -60,11 +60,8 @@ func (server *Server) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest)
 
 	user, err := server.store.UpdateUser(ctx, arg)
 	if err != nil {
-		if pgerr, ok := err.(*pgconn.PgError); ok {
-			switch pgerr.Code {
-			case "23503", "23505":
-				return nil, status.Errorf(codes.InvalidArgument, "Failed to Update user: %s", pgerr)
-			}
+		if errors.Is(err, db.ErrRecordNotFound) {
+			return nil, status.Errorf(codes.NotFound, "user not found")
 		}
 		return nil, status.Errorf(codes.Internal, "Failed to Update user: %s", err)
 	}

@@ -2,8 +2,8 @@ package gapi
 
 import (
 	"context"
+	"errors"
 
-	"github.com/jackc/pgx/v5/pgconn"
 	db "github.com/xianfengyuan/simplebank/db/sqlc"
 	"github.com/xianfengyuan/simplebank/pb"
 	"github.com/xianfengyuan/simplebank/util"
@@ -22,11 +22,11 @@ func (server *Server) LoginUser(ctx context.Context, req *pb.LoginUserRequest) (
 
 	user, err := server.store.GetUser(ctx, req.Username)
 	if err != nil {
-		if pgerr, ok := err.(*pgconn.PgError); ok {
-			return nil, status.Errorf(codes.InvalidArgument, "Failed to get user: %s", pgerr)
+		if errors.Is(err, db.ErrRecordNotFound) {
+			return nil, status.Errorf(codes.NotFound, "user not found")
 		}
 
-		return nil, status.Errorf(codes.InvalidArgument, "Failed to get user: %s", err.Error())
+		return nil, status.Errorf(codes.Internal, "Failed to get user")
 	}
 
 	err = util.CheckPassword(req.Password, user.HashedPassword)
