@@ -18,14 +18,14 @@ func createRandomUser(t *testing.T) User {
 		Email:          util.RandomEmail(),
 	}
 
-	user, err := testQueries.CreateUser(context.Background(), arg)
+	user, err := testStore.CreateUser(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, user)
 	require.Equal(t, arg.Username, user.Username)
 	require.Equal(t, arg.HashedPassword, user.HashedPassword)
 	require.Equal(t, arg.FullName, user.FullName)
 	require.Equal(t, arg.Email, user.Email)
-	require.True(t, user.PasswordChangedAt.Time.IsZero())
+	require.True(t, user.PasswordChangedAt.IsZero())
 	require.NotZero(t, user.CreatedAt)
 
 	return user
@@ -37,7 +37,7 @@ func TestCreateUser(t *testing.T) {
 
 func TestGetUser(t *testing.T) {
 	user1 := createRandomUser(t)
-	user2, err := testQueries.GetUser(context.Background(), user1.Username)
+	user2, err := testStore.GetUser(context.Background(), user1.Username)
 	require.NoError(t, err)
 	require.NotEmpty(t, user2)
 
@@ -45,14 +45,14 @@ func TestGetUser(t *testing.T) {
 	require.Equal(t, user1.HashedPassword, user2.HashedPassword)
 	require.Equal(t, user1.FullName, user2.FullName)
 	require.Equal(t, user1.Email, user2.Email)
-	require.WithinDuration(t, user1.CreatedAt.Time, user2.CreatedAt.Time, time.Second)
+	require.WithinDuration(t, user1.CreatedAt, user2.CreatedAt, time.Second)
 }
 
 func TestUpdateUserOnlyFullName(t *testing.T) {
 	oldUser := createRandomUser(t)
 
 	newFullName := util.RandomOwner()
-	updatedUser, err := testQueries.UpdateUser(context.Background(), UpdateUserParams{
+	updatedUser, err := testStore.UpdateUser(context.Background(), UpdateUserParams{
 		Username: oldUser.Username,
 		FullName: pgtype.Text{
 			String: newFullName,
@@ -76,7 +76,7 @@ func TestUpdateUserAllFields(t *testing.T) {
 	newHashedPassword, err := util.HashedPassword(newPassword)
 	require.NoError(t, err)
 
-	updatedUser, err := testQueries.UpdateUser(context.Background(), UpdateUserParams{
+	updatedUser, err := testStore.UpdateUser(context.Background(), UpdateUserParams{
 		Username: oldUser.Username,
 		FullName: pgtype.Text{
 			String: newFullName,

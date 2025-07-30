@@ -10,8 +10,6 @@ import (
 	"github.com/xianfengyuan/simplebank/util"
 )
 
-var testQueries *Queries
-var testDB *pgxpool.Pool
 var testStore Store
 
 func TestMain(m *testing.M) {
@@ -24,8 +22,6 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
 	}
-
-	testQueries = New(testDB)
 
 	testStore = NewStore(testDB)
 

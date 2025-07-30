@@ -7,7 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgconn"
-	"github.com/jackc/pgx/v5/pgtype"
 	db "github.com/xianfengyuan/simplebank/db/sqlc"
 	"github.com/xianfengyuan/simplebank/util"
 )
@@ -32,8 +31,8 @@ func newUserResponse(user db.User) userResponse {
 		Username:          user.Username,
 		FullName:          user.FullName,
 		Email:             user.Email,
-		PasswordChangedAt: user.PasswordChangedAt.Time.String(),
-		CreatedAt:         user.CreatedAt.Time.String(),
+		PasswordChangedAt: user.PasswordChangedAt.String(),
+		CreatedAt:         user.CreatedAt.String(),
 	}
 }
 
@@ -152,10 +151,7 @@ func (server *Server) loginUser(ctx *gin.Context) {
 		UserAgent:    ctx.Request.UserAgent(),
 		ClientIp:     ctx.ClientIP(),
 		IsBlocked:    false,
-		ExpiresAt: pgtype.Timestamptz{
-			Time:  refreshPayload.ExpiredAt,
-			Valid: true,
-		},
+		ExpiresAt: refreshPayload.ExpiredAt,
 	})
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))

@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/jackc/pgx/v5/pgconn"
-	"github.com/jackc/pgx/v5/pgtype"
 	db "github.com/xianfengyuan/simplebank/db/sqlc"
 	"github.com/xianfengyuan/simplebank/pb"
 	"github.com/xianfengyuan/simplebank/util"
@@ -58,10 +57,7 @@ func (server *Server) LoginUser(ctx context.Context, req *pb.LoginUserRequest) (
 		UserAgent:    "",
 		ClientIp:     "",
 		IsBlocked:    false,
-		ExpiresAt: pgtype.Timestamptz{
-			Time:  refreshPayload.ExpiredAt,
-			Valid: true,
-		},
+		ExpiresAt: refreshPayload.ExpiredAt,
 	})
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "Failed to create session: %s", err)
